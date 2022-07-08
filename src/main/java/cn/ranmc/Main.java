@@ -19,41 +19,6 @@ public class Main {
     private static String key = "";
     private static WebSocketClient client;
 
-    private static void check(String result) {
-        try {
-            JSONObject obj = new JSONObject(result);
-            if (obj.has("method") && obj.getString("method").equals("newmsg")) {
-                JSONObject data = obj.getJSONObject("data");
-                String msg = data.getString("msg");
-                if(msg.contains("查服 ")) {
-                    String wxid = data.getString("fromid");
-                    msg = msg.replace("查服 ", "");
-                    String ip = msg;
-                    int port = 25565;
-                    if (msg.contains(":")) {
-                        port = Integer.parseInt(ip.split(":")[1]);
-                        ip = ip.split(":")[0];
-                    }
-                    JSONObject ping = new JSONObject(new MinecraftPing().getPing(new MinecraftPingOptions().setHostname(ip).setPort(port)));
-                    String text = "查询结果\n地址:" + msg +
-                            "\n人数:" + ping.getJSONObject("players").getInt("online") + "/" + ping.getJSONObject("players").getInt("max") +
-                            "\n版本:" + ping.getJSONObject("version").getString("name");
-                    System.out.println("来自 " + data.getString("nickName") + "的查询");
-                    System.out.println(text);
-                    JSONObject send = new JSONObject();
-                    send.put("method", "sendText");
-                    send.put("wxid", wxid);
-                    send.put("msg", text);
-                    send.put("atid", "");
-                    send.put("pid", "0");
-                    client.send(send.toString());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
 
         System.out.println("查询我的世界服务器 By阿然");
@@ -74,10 +39,9 @@ public class Main {
                     System.out.println("连接成功");
                 }
 
-                @SneakyThrows
                 @Override
-                public void onMessage(String s) {
-                    check(s);
+                public void onMessage(String result) {
+                    send(MinecraftCheck.getResult(result));
                 }
 
                 @Override
@@ -96,25 +60,10 @@ public class Main {
             e.printStackTrace();
             System.out.println("启动失败");
         }
-        /*
-        HttpServer httpserver;
-        int port = 8086;
-        System.out.println("请输入key用于回复信息");
-        Scanner scanner = new Scanner(System.in);
-        key = scanner.next();*/
-/*
-        try {
-            HttpServerProvider provider = HttpServerProvider.provider();
-            httpserver = provider.createHttpServer(new InetSocketAddress(port), 100);
 
-            httpserver.createContext("/check",new CheckHttpHandler(key));
-            httpserver.setExecutor(null);
-            httpserver.start();
 
-            System.out.println("已运行在端口:" + port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
     }
+
+
 }
