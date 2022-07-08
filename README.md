@@ -7,7 +7,7 @@ java -jar MCCheck.jar
 
 运行截图  
 
-![4G{W9R{HK$)KD4G0G`(GG(H](https://user-images.githubusercontent.com/69817107/177952469-1007c8fa-c2b6-4f17-830f-4b9ead778d59.png)
+![微信图片_20220708213541](https://user-images.githubusercontent.com/69817107/178002623-6735f4c3-5d86-402e-b8e3-7c2d5730e746.png)
 
 效果如下  
 
